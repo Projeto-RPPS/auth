@@ -16,6 +16,13 @@ export class UsuarioService {
     return this.repo.save(this.repo.create({ cpf, password, role }));
   }
 
+  async createAdmin(cpf: string, plain: string, role: Usuario['role'] = 'admin') {
+    if (await this.repo.findOne({ where: { cpf } }))
+      throw new BadRequestException('CPF já cadastrado');
+    const password = await bcrypt.hash(plain, 10);
+    return this.repo.save(this.repo.create({ cpf, password, role }));
+  }
+
   findByCpf(cpf: string) {
     return this.repo.findOne({ where: { cpf } });
   }
@@ -26,5 +33,9 @@ export class UsuarioService {
       throw new NotFoundException(`Usuário com id ${id} não encontrado`);
     }
     return user;
+  }
+
+  findAll(): Promise<Usuario[]> {
+    return this.repo.find();
   }
 }

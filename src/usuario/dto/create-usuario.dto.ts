@@ -12,7 +12,7 @@ export class CreateUsuarioDto {
   @IsString()
   password: string;
 
-  @ApiProperty({ example: 'user', enum: ['user','admin'], default: 'user', required: false })
+  @ApiProperty({ example: 'user/admin', enum: ['user','admin'], default: 'user', required: false })
   @IsOptional()
   @IsIn(['user','admin'])
   role?: UserRole;

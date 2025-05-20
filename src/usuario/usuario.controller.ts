@@ -22,11 +22,22 @@ export class UsuarioController {
     return this.users.create(dto.cpf, dto.password, 'user');
   }
 
+  @Post('registerAdmin')
+  @ApiOperation({ summary: 'Registrar usuário (role=admin)' })
+  @ApiResponse({ status: 201, description: 'Admin criado.' })
+  @ApiBody({ type: CreateUsuarioDto })
+  registerAdmin(@Body() dto: CreateUsuarioDto) {
+    return this.users.createAdmin(dto.cpf, dto.password, 'admin');
+  }
+
   // opcional: buscar um usuário
-  @Get(':id')
-  @ApiBearerAuth()
-  @ApiOperation({ summary: 'Buscar usuário por id' })
-  findOne(@Param('id') id: number) {
-    return this.users.findById(+id);
+  @Get()
+  @ApiOperation({ summary: 'Listar todos os usuários' })
+  @ApiResponse({
+    status: 200,
+    description: 'Retorna a lista de todos os usuários.',
+  })
+  findAll() {
+    return this.users.findAll();
   }
 }
