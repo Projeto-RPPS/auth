@@ -1,0 +1,7 @@
+DB_HOST=ip_vm
+DB_PORT=5432
+DB_USER=postgres
+DB_PASS=postgres
+DB_NAME=loginDB
+JWT_SECRET=senha
+JWT_EXPIRES_IN=time
