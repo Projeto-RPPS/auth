@@ -1,15 +1,18 @@
-// src/main.ts
 import { NestFactory }          from '@nestjs/core';
 import { AppModule }            from './app.module';
 import { ValidationPipe }       from '@nestjs/common';
 import { SwaggerModule, DocumentBuilder } from '@nestjs/swagger';
+import * as cookieParser        from 'cookie-parser';
 
 async function bootstrap() {
   const app = await NestFactory.create(AppModule);
 
+  app.use(cookieParser());
+
   app.enableCors({
-    origin: true,
-  })
+    origin: 'http://localhost:5173',  // ou qualquer domínio do seu front
+    credentials: true,                // <— importante
+  });
 
   app.useGlobalPipes(
     new ValidationPipe({ transform: true, whitelist: true }),
@@ -17,26 +20,26 @@ async function bootstrap() {
 
   const config = new DocumentBuilder()
     .setTitle('Rpps-Auth API')
-    .setDescription('Documentação da API com Swagger + JWT')
+    .setDescription('Documentação da API com Swagger + cookie-jwt')
     .setVersion('1.0')
-    // Adiciona o botão “Authorize” no Swagger
-    .addBearerAuth(
-      {
-        type: 'http',
-        scheme: 'bearer',
-        bearerFormat: 'JWT',
-        description: 'Digite o token gerado em /auth/login',
-      },
-      'JWT-auth', // chave que usaremos nos controllers
-    )
+    // esquema de cookie:
+    .addCookieAuth('cookieAuth', {   // chave interna "cookieAuth"
+      type: 'apiKey',
+      in: 'cookie',
+      name: 'Authentication',         // mesmo nome que você usa em res.cookie()
+    }, 'cookieAuth',)
     .build();
 
   const document = SwaggerModule.createDocument(app, config, {
-    // inclui o guard @ApiBearerAuth() em todas as rotas protegidas
     deepScanRoutes: true,
   });
 
-  SwaggerModule.setup('api', app, document);
+  // habilita envio de credenciais no Swagger UI
+  SwaggerModule.setup('api', app, document, {
+    swaggerOptions: {
+      requestCredentials: 'include',  // <— faz o browser anexar cookies
+    }
+  });
 
   await app.listen(3001);
   console.log(`> Swagger disponível em http://localhost:3001/api`);
