@@ -41,7 +41,7 @@ async function bootstrap() {
     }
   });
 
-  await app.listen(3001);
+  await app.listen(3001, '0.0.0.0');
   console.log(`> Swagger disponível em http://localhost:3001/api`);
 }
 
