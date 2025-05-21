@@ -1,17 +1,17 @@
-# Usa Node 20 LTS
+# Dockerfile.dev (NestJS em modo dev)
 FROM node:20-alpine
 
 WORKDIR /app
 
-# Copia manifestos e instala deps
-COPY package.json package-lock.json ./
+# 1. Copia manifestos e instala deps exatamente como no lockfile
+COPY package.json package-lock.json tsconfig*.json ./
 RUN npm ci
 
-# Copia todo o código-fonte
+# 2. Copia todo o código-fonte
 COPY . .
 
-# Expõe a porta do Vite
-EXPOSE 5173
+# 3. Exponha a porta padrão do Nest em dev (3000)
+EXPOSE 3001
 
-# Inicia em modo dev (hot-reload)
-CMD ["npm", "run", "dev"]
+# 4. Inicia em modo watch
+CMD ["npm", "run", "start:dev"]
