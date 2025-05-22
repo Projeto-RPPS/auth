@@ -10,7 +10,7 @@ async function bootstrap() {
   app.use(cookieParser());
 
   app.enableCors({
-    origin: 'http://localhost:5173',  // ou qualquer domínio do seu front
+    origin: 'http://192.168.38.16:5173',  // ou qualquer domínio do seu front
     credentials: true,                // <— importante
   });
 
@@ -42,7 +42,7 @@ async function bootstrap() {
   });
 
   await app.listen(3001, '0.0.0.0');
-  console.log(`> Swagger disponível em http://localhost:3001/api`);
+  console.log(`> Swagger disponível em http://192.168.38.16:3001/api`);
 }
 
 bootstrap();
